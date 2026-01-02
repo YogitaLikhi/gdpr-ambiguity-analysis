@@ -8,25 +8,37 @@ def load_vague_phrases(file_path):
 
 def detect_vague_phrases(clause, vague_phrases):
     clause_lower = clause.lower()
-    found_phrases = []
+    found = []
 
     for phrase in vague_phrases:
         if phrase in clause_lower:
-            found_phrases.append(phrase)
+            found.append(phrase)
 
-    return found_phrases
-
+    return {
+        "count": len(found),
+        "phrases": found
+    }
+    
 
 def detect_modal_verbs(clause):
-    modal_verbs = ["may", "might", "could", "would"]
+    modal_verbs = ["may", "might", "could", "would", "can"]
     clause_lower = clause.lower()
 
-    found_modals = []
-    for modal in modal_verbs:
-        if f" {modal} " in f" {clause_lower} ":
-            found_modals.append(modal)
+    ambiguous_modals = []
 
-    return found_modals
+    # Company-action ambiguity patterns
+    patterns = [
+    r"\bwe\s+(may\s+(?:collect|use|share|retain|process|store|disclose))",
+    r"\bwe\s+(might\s+(?:collect|use|share|retain|process|store|disclose))",
+    r"\bwe\s+(could\s+(?:collect|use|share|retain|process|store|disclose))",
+    r"\b(may\s+be\s+(?:used|shared|stored|processed))"
+    ]
+
+    for pattern in patterns:
+        matches = re.findall(pattern, clause_lower)
+        ambiguous_modals.extend(matches)
+
+    return list(set(ambiguous_modals))
 
 
 def has_duration(clause):

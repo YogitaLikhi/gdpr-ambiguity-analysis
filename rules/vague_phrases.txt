@@ -1,8 +1,6 @@
-may
-might
-could
 as necessary
 as required
+as appropriate
 as and when required
 from time to time
 where appropriate
@@ -10,3 +8,4 @@ generally
 typically
 as needed
 reasonable measures
+including but not limited to
