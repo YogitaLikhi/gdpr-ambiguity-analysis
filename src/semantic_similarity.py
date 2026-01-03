@@ -77,7 +77,7 @@ def get_anchor_related_clauses(
 
         related.append({
             "clause_id": idx + 1,
-            "text": paragraphs[idx][:300]
+            "text": paragraphs[idx]
         })
 
         used_indices.add(idx)

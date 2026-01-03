@@ -1,149 +1,166 @@
-# Privacy Policy Clause Ambiguity Detection
+# GDPR Privacy Policy Ambiguity Detection Tool
 
-This project detects **ambiguous clauses** in privacy policies using an **explainable, rule-based NLP pipeline** enhanced with **semantic similarity** for contextual retrieval. The system is designed for legal and compliance analysis, prioritizing transparency over black-box accuracy.
+## 📌 Project Overview
 
----
+This project presents a **rule-based and semantic-assisted system** to analyze privacy policies for **ambiguity and lack of specificity**, with a focus on GDPR-relevant aspects such as:
 
-## 🎯 Objective
+* Purpose limitation
+* Data retention
+* Data categories collected
+* User access and control rights
 
-To automatically identify clauses in privacy policies that are **ambiguous**, **vague**, or **underspecified**, particularly with respect to:
-- Data collection
-- Data sharing
-- Data retention
-- User rights and access
-- Legal disclosures
+The tool operates **without using Large Language Models (LLMs)** and instead relies on:
 
----
-
-## 🧠 Approach
-
-The system follows a **hybrid architecture**:
-
-### 1. Rule-Based Ambiguity Detection
-- Modal verb analysis (e.g., *may*, *might*, *generally*)
-- Vague temporal expressions (e.g., *as long as necessary*)
-- Missing or underspecified obligations
-- Explicit vs vague vs missing specificity scoring
-
-### 2. Semantic Clause Retrieval
-- TF-IDF vectorization with n-grams
-- Cosine similarity for paragraph-to-paragraph matching
-- Anchor-based retrieval to locate related clauses
-- Scope filtering to avoid cross-section contamination (e.g., career vs customer data)
-
-### 3. Explainability
-Each flagged clause is accompanied by:
-- Ambiguity score
-- Detected linguistic signals
-- Retrieved related clauses (when applicable)
+* Linguistic rules (modal verbs, vague phrases)
+* Clause-level ambiguity scoring
+* Policy-level specificity analysis
+* TF-IDF–based semantic similarity for clause retrieval
+* An interactive **Streamlit UI** for analysis and visualization
 
 ---
 
-## 🛠️ Technologies Used
+## 🎯 Key Features
 
-- Python
-- scikit-learn (TF-IDF, cosine similarity)
-- Pandas
-- Regex-based NLP rules
+### Clause-Level Analysis
 
----
+* Detects **modal verbs** (e.g., *may, might, could*)
+* Detects **vague phrases** (e.g., *as necessary, from time to time*)
+* Computes an **ambiguity score per clause**
+* Displays **only ambiguous clauses** in the final report
+* Highlights detected modal verbs and vague phrases in the UI
 
-## 📊 Evaluation
+### Policy-Level Specificity Analysis
 
-- Expert-annotated ground truth dataset
-- Binary classification: Ambiguous (1) / Not Ambiguous (0)
-- Metrics used:
-  - Precision
-  - Recall
-  - F1-score
+For each GDPR-relevant aspect, the policy is classified as:
 
----
+* **Explicit**
+* **Vague**
+* **Missing**
 
-## 📁 Project Structure
-# Privacy Policy Clause Ambiguity Detection
+If a specificity is *vague or missing*, the system:
 
-This project detects **ambiguous clauses** in privacy policies using an **explainable, rule-based NLP pipeline** enhanced with **semantic similarity** for contextual retrieval. The system is designed for legal and compliance analysis, prioritizing transparency over black-box accuracy.
+* Retrieves **semantically related clauses** using TF-IDF similarity
+* Displays them on user interaction (collapsible view)
 
----
+### Summary Metrics
 
-## 🎯 Objective
+* Total number of clauses
+* Number of ambiguous clauses
+* Ambiguity ratio
 
-To automatically identify clauses in privacy policies that are **ambiguous**, **vague**, or **underspecified**, particularly with respect to:
-- Data collection
-- Data sharing
-- Data retention
-- User rights and access
-- Legal disclosures
+### Evaluation
 
----
+* Manual expert annotation
+* Precision, Recall, and F1-score reported
+* Evaluation results shown in the UI sidebar
 
-## 🧠 Approach
+### Exportability
 
-The system follows a **hybrid architecture**:
-
-### 1. Rule-Based Ambiguity Detection
-- Modal verb analysis (e.g., *may*, *might*, *generally*)
-- Vague temporal expressions (e.g., *as long as necessary*)
-- Missing or underspecified obligations
-- Explicit vs vague vs missing specificity scoring
-
-### 2. Semantic Clause Retrieval
-- TF-IDF vectorization with n-grams
-- Cosine similarity for paragraph-to-paragraph matching
-- Anchor-based retrieval to locate related clauses
-- Scope filtering to avoid cross-section contamination (e.g., career vs customer data)
-
-### 3. Explainability
-Each flagged clause is accompanied by:
-- Ambiguity score
-- Detected linguistic signals
-- Retrieved related clauses (when applicable)
+* Full analysis report downloadable as **JSON**
 
 ---
 
-## 🛠️ Technologies Used
+## 🖥️ User Interface (Streamlit)
 
-- Python
-- scikit-learn (TF-IDF, cosine similarity)
-- Pandas
-- Regex-based NLP rules
+The Streamlit UI supports:
 
-❗ No large language models (LLMs) or pretrained classifiers are used to ensure:
-- Full explainability
-- Clear attribution of system behavior
-- Suitability for low-resource and academic evaluation settings
+### Input Methods
 
----
+* 📋 Paste privacy policy text
+* 📄 Upload `.txt` file
 
-## 📊 Evaluation
+### Output Sections
 
-- Expert-annotated ground truth dataset
-- Binary classification: Ambiguous (1) / Not Ambiguous (0)
-- Metrics used:
-  - Precision
-  - Recall
-  - F1-score
+* Policy-level summary cards
+* Specificity status blocks (Explicit / Vague / Missing)
+* Collapsible ambiguous clauses with highlights
+* Downloadable JSON report
 
-### Current Results
-- Precision: **0.63**
-- Recall: **0.47**
-- F1-score: **0.54**
+### Disclaimer
 
-Given the rule-based nature of the system, these results are considered acceptable and interpretable.
+> *This tool assists in ambiguity detection and does not constitute legal advice.*
 
 ---
 
-## 📁 Project Structure
-├── main.py # Main pipeline
-├── semantic_similarity.py # TF-IDF clause similarity
-├── ambiguity_detector.py # Ambiguity detection rules
-├── evaluation.py # Precision / Recall / F1
+## 🧠 Methodology (High-Level)
+
+1. **Policy ingestion & paragraph segmentation**
+2. **Clause-level ambiguity detection**
+
+   * Modal verb detection (with user-permission exceptions)
+   * Vague phrase detection
+3. **Ambiguity scoring**
+4. **Policy-level specificity checks**
+
+   * Rule-based detection
+   * Tri-state classification
+5. **Semantic clause retrieval**
+
+   * TF-IDF + cosine similarity
+   * Anchor-based scope filtering
+6. **Evaluation against annotated ground truth**
+7. **Visualization via Streamlit**
+
+---
+
+## 🚀 Future Work
+
+* Context-aware vague phrase handling
+* Improved access rights detection
+* Better retention period grounding
+* Enhanced semantic retrieval using pretrained embeddings
+* LLM-assisted reasoning (subject to constraints)
+* UI improvements and clause-level navigation
+
+---
+
+## 🛠️ Setup Instructions
+
+### 1. Install Dependencies
+
+pip install -r requirements.txt
+
+### 2. Run the Streamlit App
+
+streamlit run ui/app.py
+
+---
+
+## 📂 Project Structure (Simplified)
+
+```
+gdpr_ambiguity_project/
+│
+├── src/
+│   ├── main.py
+│   ├── ambiguity_detector.py
+│   ├── clause_scorer.py
+|   |── constants.py
+|   |── paragraph_segmenter.py
+│   ├── semantic_similarity.py
+│   └── specificity_detector.py
+│
+├── ui/
+│   └── app.py
+│
+├── rules/
+│   └── vague_phrases.txt
+│
 ├── data/
-│ ├── policies.txt
-│ └── annotated_clauses.csv
+│   └── sample_policies/
+│
+├── output/
+│   └── report.json
+│
+├── requirements.txt
 └── README.md
+```
 
-## 👩‍💻 Author
+---
 
-Yogita Likhi  
-Mini Project – Privacy Policy Analysis  
+## 👩‍💻 Author Notes
+
+* The system intentionally avoids LLMs to ensure transparency, reproducibility, and rule explainability.
+* Designed as an academic prototype for privacy policy analysis and evaluation.
+
+---

@@ -16,164 +16,122 @@ from ambiguity_detector import (
 from constants import ANCHORS
 import json
 
-policy_text = load_policy("../data/zomato_policy.txt")
-vague_phrases = load_vague_phrases("../rules/vague_phrases.txt")
-paragraphs = segment_into_paragraphs(policy_text)
-similarity_matrix, _ = compute_similarity_matrix(paragraphs)
+def analyze_policy(policy_text: str) -> dict:
+    vague_phrases = load_vague_phrases()
 
-clause_results = []
-ambiguous_clause_count = 0
+    paragraphs = segment_into_paragraphs(policy_text)
 
-for i, paragraph in enumerate(paragraphs):
+    similarity_matrix, vectorizer = compute_similarity_matrix(paragraphs)
 
-    if is_user_permission(paragraph):
-        ambiguous_modals = []
-    else:
-        ambiguous_modals = detect_modal_verbs(paragraph)
+    clause_results = []
+    ambiguous_clause_count = 0
 
-    vague_result = detect_vague_phrases(paragraph, vague_phrases)
+    for i, paragraph in enumerate(paragraphs):
 
-    ambiguity_score = compute_clause_score(
-        len(ambiguous_modals),
-        vague_result["count"]
-    )
+        if is_user_permission(paragraph):
+            ambiguous_modals = []
+        else:
+            ambiguous_modals = detect_modal_verbs(paragraph)
 
-    if ambiguity_score > 0:
-        ambiguous_clause_count += 1
+        vague_result = detect_vague_phrases(paragraph, vague_phrases)
 
-        clause_results.append({
-            "clause_id": i + 1,
-            "text": paragraph,
-            "ambiguity_score": ambiguity_score,
-            "modal_verbs": ambiguous_modals,
-            "vague_phrases": vague_result["phrases"]
-        })
-
-similarity_matrix, vectorizer = compute_similarity_matrix(paragraphs)
-
-policy_coverage = {
-    "purpose": "missing",
-    "retention": "missing",
-    "data_categories": "missing",
-    "access_rights": "missing"
-}
-
-for i, paragraph in enumerate(paragraphs):
-
-    found, status = mentions_purpose(paragraph)
-
-    if found:
-        if status == "explicit":
-            policy_coverage["purpose"] = "explicit"
-        elif policy_coverage["purpose"] != "explicit":
-            policy_coverage["purpose"] = "vague"
-
-    found, status = mentions_retention(paragraph)
-
-    if found:
-        if status == "explicit":
-            policy_coverage["retention"] = "explicit"
-        elif policy_coverage["retention"] != "explicit":
-            policy_coverage["retention"] = "vague"
-
-    found, status = mentions_data_category(paragraph)
-
-    if found:
-        if status == "explicit":
-            policy_coverage["data_categories"] = "explicit"
-        elif policy_coverage["data_categories"] != "explicit":
-            policy_coverage["data_categories"] = "vague"
-    
-    found, status = mentions_access_rights(paragraph)
-
-    if found:
-        if status == "explicit":
-            policy_coverage["access_rights"] = "explicit"
-        elif policy_coverage["access_rights"] != "explicit":
-            policy_coverage["access_rights"] = "vague"
-
-
-policy_level_details = {}
-
-if policy_coverage["retention"] in ["missing", "vague"]:
-    policy_level_details["retention"] = {
-        "status": policy_coverage["retention"],
-        "related_clauses": get_anchor_related_clauses(
-            paragraphs,
-            vectorizer,
-            ANCHORS["retention"],
-            mentions_retention,
-            anchor_type="retention"
+        ambiguity_score = compute_clause_score(
+            len(ambiguous_modals),
+            vague_result["count"]
         )
-    }
-else:
-    policy_level_details["retention"] = {
-        "status": "explicit"
+
+        if ambiguity_score > 0:
+            ambiguous_clause_count += 1
+
+            clause_results.append({
+                "clause_id": i + 1,
+                "text": paragraph,
+                "ambiguity_score": ambiguity_score,
+                "modal_verbs": ambiguous_modals,
+                "vague_phrases": vague_result["phrases"]
+            })
+
+    # ---- Policy-level coverage ----
+    policy_coverage = {
+        "purpose": "missing",
+        "retention": "missing",
+        "data_categories": "missing",
+        "access_rights": "missing"
     }
 
-if policy_coverage["purpose"] in ["missing", "vague"]:
-    policy_level_details["purpose"] = {
-        "status": policy_coverage["purpose"],
-        "related_clauses": get_anchor_related_clauses(
-            paragraphs,
-            vectorizer,
-            ANCHORS["purpose"],
-            mentions_purpose,
-            anchor_type="purpose"
-        )
-    }
-else:
-    policy_level_details["purpose"] = {
-        "status": "explicit"
-    }
+    for paragraph in paragraphs:
 
-if policy_coverage["data_categories"] in ["missing", "vague"]:
-    policy_level_details["data_categories"] = {
-        "status": policy_coverage["data_categories"],
-        "related_clauses": get_anchor_related_clauses(
-            paragraphs,
-            vectorizer,
-            ANCHORS["data_categories"],
-            mentions_data_category,
-            anchor_type="data_categories"
-        )
-    }
-else:
-    policy_level_details["data_categories"] = {
-        "status": "explicit"
-    }
+        found, status = mentions_purpose(paragraph)
+        if found:
+            policy_coverage["purpose"] = (
+                "explicit" if status == "explicit" else
+                "vague" if policy_coverage["purpose"] != "explicit" else "explicit"
+            )
 
-if policy_coverage["access_rights"] in ["missing", "vague"]:
-    policy_level_details["access_rights"] = {
-        "status": policy_coverage["access_rights"],
-        "related_clauses": get_anchor_related_clauses(
-            paragraphs,
-            vectorizer,
-            ANCHORS["access_rights"],
-            mentions_access_rights,
-            anchor_type="access_rights"
-        )
-    }
-else:
-    policy_level_details["access_rights"] = {
-        "status": "explicit"
-    }
+        found, status = mentions_retention(paragraph)
+        if found:
+            policy_coverage["retention"] = (
+                "explicit" if status == "explicit" else
+                "vague" if policy_coverage["retention"] != "explicit" else "explicit"
+            )
 
-final_output = {
+        found, status = mentions_data_category(paragraph)
+        if found:
+            policy_coverage["data_categories"] = (
+                "explicit" if status == "explicit" else
+                "vague" if policy_coverage["data_categories"] != "explicit" else "explicit"
+            )
+
+        found, status = mentions_access_rights(paragraph)
+        if found:
+            policy_coverage["access_rights"] = (
+                "explicit" if status == "explicit" else
+                "vague" if policy_coverage["access_rights"] != "explicit" else "explicit"
+            )
+
+    policy_level_details = {}
+
+    for key, detector in [
+        ("retention", mentions_retention),
+        ("purpose", mentions_purpose),
+        ("data_categories", mentions_data_category),
+        ("access_rights", mentions_access_rights),
+    ]:
+        if policy_coverage[key] in ["missing", "vague"]:
+            policy_level_details[key] = {
+                "status": policy_coverage[key],
+                "related_clauses": get_anchor_related_clauses(
+                    paragraphs,
+                    vectorizer,
+                    ANCHORS[key],
+                    detector,
+                    anchor_type=key
+                )
+            }
+        else:
+            policy_level_details[key] = {"status": "explicit"}
+
+    return {
         "policy_summary": {
-        "total_clauses": len(paragraphs),
-        "ambiguous_clause_count": ambiguous_clause_count,
-        "ambiguity_ratio": round(
-        ambiguous_clause_count / len(paragraphs), 2
-        ),
-        "coverage": policy_level_details
-    },
-    "clause_analysis": clause_results
-}
+            "total_clauses": len(paragraphs),
+            "ambiguous_clause_count": ambiguous_clause_count,
+            "ambiguity_ratio": round(
+                ambiguous_clause_count / len(paragraphs), 2
+            ),
+            "coverage": policy_level_details
+        },
+        "clause_analysis": clause_results
+    }
 
-output_path = "../output/report.json"
 
-with open(output_path, "w", encoding="utf-8") as f:
-    json.dump(final_output, f, indent=4, ensure_ascii=False)
+if __name__ == "__main__":
+    policy_text = load_policy("../data/zomato_policy.txt")
 
-print(f"✅ Output successfully saved to '{output_path}'")
+    final_output = analyze_policy(policy_text)
+
+    output_path = "../output/report.json"
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(final_output, f, indent=4, ensure_ascii=False)
+
+    print(f"✅ Output successfully saved to '{output_path}'")

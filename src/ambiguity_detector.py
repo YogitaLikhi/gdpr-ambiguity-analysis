@@ -1,9 +1,13 @@
 import re
+import os
 
-def load_vague_phrases(file_path):
-    with open(file_path, 'r', encoding='utf-8') as f:
-        phrases = [line.strip().lower() for line in f if line.strip()]
-    return phrases
+def load_vague_phrases(file_path=None):
+    if file_path is None:
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        file_path = os.path.join(BASE_DIR, "rules", "vague_phrases.txt")
+
+    with open(file_path, "r", encoding="utf-8") as f:
+        return [line.strip().lower() for line in f if line.strip()]
 
 
 def detect_vague_phrases(clause, vague_phrases):
