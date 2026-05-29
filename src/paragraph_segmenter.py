@@ -15,16 +15,10 @@ def segment_into_paragraphs(policy_text, min_length=40):
         # Remove very short / noisy fragments
         if len(cleaned) >= min_length:
             paragraphs.append(cleaned)
-
     return paragraphs
 
 """
-Splits policy text into paragraph-level blocks.
-    
-    Args:
-        policy_text (str): Full policy text
-        min_length (int): Minimum character length to keep a paragraph
-    
+Splits policy text into paragraph-level blocks called clauses.
     Returns:
         List[str]: Cleaned paragraph blocks
 """

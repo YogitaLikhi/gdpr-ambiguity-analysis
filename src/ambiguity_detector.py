@@ -31,11 +31,30 @@ def detect_modal_verbs(clause):
     ambiguous_modals = []
 
     # Company-action ambiguity patterns
+    #patterns = [
+    #r"\bwe\s+(may\s+(?:collect|use|share|retain|process|store|disclose))",
+    #r"\bwe\s+(might\s+(?:collect|use|share|retain|process|store|disclose))",
+    #r"\bwe\s+(could\s+(?:collect|use|share|retain|process|store|disclose))",
+    #r"\b(may\s+be\s+(?:used|shared|stored|processed))"
+    #]
+
+    #Sem2 Revised patterns
     patterns = [
-    r"\bwe\s+(may\s+(?:collect|use|share|retain|process|store|disclose))",
-    r"\bwe\s+(might\s+(?:collect|use|share|retain|process|store|disclose))",
-    r"\bwe\s+(could\s+(?:collect|use|share|retain|process|store|disclose))",
-    r"\b(may\s+be\s+(?:used|shared|stored|processed))"
+
+    # Company discretionary actions
+    r"\bwe\s+may\s+(collect|use|share|retain|process|store|disclose|transfer|obtain|gain)",
+    r"\bwe\s+might\s+(collect|use|share|retain|process|store|disclose|transfer|obtain|gain)",
+    r"\bwe\s+could\s+(collect|use|share|retain|process|store|disclose|transfer|obtain|gain)",
+
+    # Passive ambiguity
+    r"\binformation\s+may\s+be\s+(shared|stored|processed|transferred|disclosed)",
+    r"\bdata\s+may\s+be\s+(shared|stored|processed|transferred|disclosed)",
+
+    # Open-ended vague processing
+    r"\bmay\s+include\b",
+    r"\bmay\s+also\b",
+    r"\bmay\s+additionally\b"
+
     ]
 
     for pattern in patterns:

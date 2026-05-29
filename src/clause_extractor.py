@@ -15,7 +15,6 @@ def extract_clauses(text):
         cleaned = sentence.strip()
         if cleaned:
             clauses.append(cleaned)
-
     return clauses
 
 

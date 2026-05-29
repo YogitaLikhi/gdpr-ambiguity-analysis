@@ -133,7 +133,6 @@ Payment Card Information: To use certain aspects of our Services, such as to mak
 
 When you use a credit or debit card to secure a reservation through our Services, we provide your credit or debit card account information to our third-party payment service providers.
 When you initially provide your credit or debit card account information through our Services in order to use our payment services, we provide your credit or debit card account information to our third-party payment service providers. As explained in our Terms of Service, these third parties may store your credit or debit card account information so you can use such payment services in the future.
-
 Data Storage
 Eternal may process and retain your personal information on its servers in India where its data centers are located, and/or on the servers of its third parties (in or outside India), having contractual relationships with Eternal.
 
@@ -147,7 +146,6 @@ Limitations: Your rights regarding your personal information may be limited, sub
 If your requests are abusive or unreasonably excessive,
 Where the rights or safety of another person or persons would be encroached upon, or
 If the information or material you request relates to existing or anticipated legal proceedings between you and us, or providing access to you would prejudice negotiations between us or an investigation of possible unlawful activity. Your right to review, update, correct, and delete your information is subject to our records retention policies and applicable law, including any statutory retention requirements.
-
 Information Pertaining to Service Partners
 This section applies specifically to individuals who engage with Eternal and its affiliates (entities under common ownership or control, including Blinkit and Hyperpure) as independent contractors or partners to provide various services facilitated through the respective platforms ("Service Partners"). This may include, without limitation, individuals providing delivery, logistics, fulfillment, procurement support, or other operational services. If you engage with us as a Service Partner, we collect and process your personal information for purposes related to your onboarding, eligibility verification, the facilitation and management of services you provide, and the administration of our contractual relationship with you.
 
@@ -179,7 +177,6 @@ Within the Eternal group of affiliated companies for operational coordination, a
 With third-party service providers who perform functions on our behalf, such as background checks, payment processing, insurance administration, communication platforms, data analytics, software provision, and technical support, under confidentiality agreements.
 As required by law, regulation, or legal process (e.g., responding to lawful requests from government agencies or law enforcement).
 With government bodies, agencies or other authorised legal entities for social security schemes and other instances where such information is requested from us by such regulatory agencies.
-
 Security: How we protect your information
 We have implemented appropriate physical, electronic, and managerial procedures to safeguard and help prevent unauthorized access to your information and to maintain data security. These safeguards take into account the sensitivity of the information that we collect, process and store and the current state of technology. We follow generally accepted industry standards to protect the personal information submitted to us, both during transmission and once we receive it. The third party service providers providing payment gateway and payment processing services are all validated as compliant with the payment card industry standard (generally referred to as PCI compliant service providers).
 
