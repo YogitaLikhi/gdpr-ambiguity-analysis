@@ -3,6 +3,7 @@ import numpy as np
 import joblib
 import json
 import os
+import re
 
 from scipy.sparse import hstack
 
@@ -77,6 +78,30 @@ def build_rule_features(text):
 # SINGLE CLAUSE PREDICTION
 # =========================
 
+def find_modal_words(text):
+
+    modal_verbs = [
+        "may",
+        "might",
+        "could",
+        "would",
+        "can"
+    ]
+
+    text_lower = text.lower()
+
+    found = []
+
+    for modal in modal_verbs:
+
+        if re.search(
+            rf"\b{modal}\b",
+            text_lower
+        ):
+            found.append(modal)
+
+    return found
+
 def predict_clause(clause):
 
     tfidf_features = tfidf.transform(
@@ -100,7 +125,7 @@ def predict_clause(clause):
         "text": clause,
         "prediction": prediction,
         "confidence": round(confidence, 3),
-        "modal_verbs": detect_modal_verbs(clause),
+        "modal_verbs": find_modal_words(clause),
         "vague_phrases":
             detect_vague_phrases(
                 clause,
@@ -219,7 +244,7 @@ def save_analysis_to_json(result):
 if __name__ == "__main__":
 
     with open(
-        "data/weverse_policy.txt",
+        "data/blinkit_policy.txt",
         "r",
         encoding="utf-8"
     ) as f:

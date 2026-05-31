@@ -24,47 +24,56 @@ def calculate_match_score(category, text):
     text = text.lower()
 
     score = 0
+    hit_count = 0
 
     if category == "purpose":
 
         for phrase in EXPLICIT_PURPOSE_KEYWORDS:
             if phrase in text:
                 score += 2
+                hit_count += 1
 
         for phrase in VAGUE_PURPOSE_KEYWORDS:
             if phrase in text:
                 score += 1
+                hit_count += 1
 
     elif category == "retention":
 
         if RETENTION_NUMERIC_PATTERN.search(text):
             score += 5
+            hit_count += 1
 
         for phrase in RETENTION_VAGUE_PHRASES:
             if phrase in text:
                 score += 1
+                hit_count += 1
 
     elif category == "data_categories":
 
         for phrase in EXPLICIT_DATA_CATEGORY_KEYWORDS:
             if phrase in text:
                 score += 2
+                hit_count += 1
 
         for phrase in VAGUE_DATA_CATEGORY_KEYWORDS:
             if phrase in text:
                 score += 1
+                hit_count += 1
 
     elif category == "access_rights":
 
         for phrase in EXPLICIT_ACCESS_KEYWORDS:
             if phrase in text:
                 score += 2
+                hit_count += 1
 
         for phrase in VAGUE_ACCESS_KEYWORDS:
             if phrase in text:
                 score += 1
+                hit_count += 1
 
-    return score
+    return score, hit_count
 
 def analyze_policy_coverage(all_clauses):
 
@@ -119,10 +128,13 @@ def analyze_policy_coverage(all_clauses):
             current_status = coverage[category]["status"]
             current_score = coverage[category]["score"]
 
-            new_score = calculate_match_score(
+            new_score, hit_count = calculate_match_score(
                 category,
                 clause_text
             )
+
+            if hit_count < 2:
+                continue
 
             if (STATUS_PRIORITY[status] > STATUS_PRIORITY[current_status]):
 
