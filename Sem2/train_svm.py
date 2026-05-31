@@ -1,4 +1,6 @@
 import pandas as pd
+import joblib
+import os
 
 from sklearn.model_selection import train_test_split
 from sklearn.svm import SVC
@@ -107,6 +109,20 @@ svm_model = SVC(
 )
 
 svm_model.fit(X_train, y_train)
+
+os.makedirs("Sem2/models", exist_ok=True)
+
+joblib.dump(
+    svm_model,
+    "Sem2/models/svm_model.pkl"
+)
+
+joblib.dump(
+    tfidf,
+    "Sem2/models/tfidf_vectorizer.pkl"
+)
+
+print("\nModel saved successfully.")
 
 y_pred_svm = svm_model.predict(X_test)
 

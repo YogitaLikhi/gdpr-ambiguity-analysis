@@ -27,7 +27,7 @@ def extract_sentences(text, min_length=15):
             cleaned = clause.strip()
 
             # Remove very short/noisy fragments
-            if len(cleaned) >= min_length:
+            if (len(cleaned) >= min_length and len(cleaned.split()) >= 5):
                 final_clauses.append(cleaned)
 
     return final_clauses

@@ -30,7 +30,15 @@ RETENTION_VAGUE_PHRASES = [
     "as long as required",
     "for as long as needed",
     "until no longer required",
-    "as required by law"
+    "as required by law",
+    "retain your information",
+    "retain your",
+    "retention",
+    "backup storage",
+    "continue to remain",
+    "storage period",
+    "stored for",
+    "keep your information"
 ]
 
 WORD_NUMBERS = {
@@ -68,14 +76,13 @@ VAGUE_DATA_CATEGORY_KEYWORDS = [
 ]
 
 EXPLICIT_ACCESS_KEYWORDS = [
-    "access your data",
-    "request access",
-    "download your data",
-    "correct your data",
-    "delete your data",
-    "data subject rights",
-    "right to access",
-    "right to erasure"
+    "access your information",
+    "update your information",
+    "modify your information",
+    "delete your information",
+    "correct your information",
+    "review your information",
+    "manage your account"
 ]
 
 VAGUE_ACCESS_KEYWORDS = [
